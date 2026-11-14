@@ -61,9 +61,6 @@ SELECT * FROM components WHERE category_id = 1;
 UPDATE components SET price = 30000.0 WHERE id = 1;
 DELETE FROM components WHERE id = 2;
 ```
-
-Для проверки восстановления завершите программу командой `EXIT` и запустите её повторно. Ранее созданные таблицы, записи и индексы должны сохраниться.
-
 ```bash
 mvn test-compile
 java -cp target/test-classes:target/classes pcdb.PerformanceTest
