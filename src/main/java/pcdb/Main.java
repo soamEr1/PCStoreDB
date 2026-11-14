@@ -2,7 +2,6 @@ package pcdb;
 
 import java.util.Scanner;
 
-/** Консольный интерфейс MiniDB. */
 public class Main {
     public static void main(String[] args) {
         Database database = new Database("data/pcstore.db");
@@ -26,7 +25,7 @@ public class Main {
             }
         }
         scanner.close();
-        System.out.println("Работа завершена. Данные сохранены.");
+        System.out.println("Работа завершенаданные сохранены.");
     }
 
     private static void printHelp() {
