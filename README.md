@@ -35,7 +35,7 @@ mvn clean package
 java -jar target/pc-store-db-1.0.jar
 ```
 
-Либо запустите класс `pcdb.Main` из IntelliJ IDEA. Рабочая папка должна быть корнем проекта, чтобы файл `data/pcstore.db` создавался в папке `data`.
+Либо запустите класс Main из IntelliJ IDEA
 
 ## 3. Пример работы
 
