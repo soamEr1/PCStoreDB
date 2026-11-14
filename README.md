@@ -23,57 +23,6 @@
 
 Связь: одна категория может содержать много комплектующих (1:N).
 
-## 3. Архитектура
-
-```mermaid
-classDiagram
-    class Main {
-      +main(String[] args)
-    }
-    class SqlEngine {
-      -Database database
-      +execute(String command) String
-    }
-    class Database {
-      -Map tables
-      +createTable()
-      +dropTable()
-      +save()
-      +load()
-      +validateForeignKeys()
-    }
-    class Table {
-      -Map columns
-      -Map rows
-      -Map indexes
-      +insert(Row)
-      +createIndex()
-      +findByIndex()
-      +rebuildIndexes()
-    }
-    class Column {
-      -String name
-      -DataType type
-      -boolean primaryKey
-      -String referencedTable
-    }
-    class Row {
-      -Map values
-      +get()
-      +set()
-    }
-    class Condition {
-      +matches(Row) boolean
-    }
-    Main --> SqlEngine
-    SqlEngine --> Database
-    Database o-- Table
-    Table o-- Column
-    Table o-- Row
-    SqlEngine --> Condition
-    Column --> DataType
-```
-
 ### Последовательность SELECT с индексом
 
 ```mermaid
@@ -95,21 +44,6 @@ sequenceDiagram
     SQL->>SQL: проверить условие и сформировать таблицу
     SQL-->>Main: результат SELECT
     Main-->>User: вывод результата
-```
-
-### Последовательность сохранения
-
-```mermaid
-sequenceDiagram
-    participant SQL as SqlEngine
-    participant DB as Database
-    participant File as Файловая система
-    SQL->>DB: выполнить изменение
-    SQL->>DB: save()
-    DB->>File: записать объект во временный файл
-    DB->>File: заменить основной файл временным
-    File-->>DB: сохранение завершено
-    DB-->>SQL: результат операции
 ```
 
 ## 4. Запуск
@@ -151,25 +85,6 @@ DELETE FROM components WHERE id = 2;
 ```
 
 Для проверки восстановления завершите программу командой `EXIT` и запустите её повторно. Ранее созданные таблицы, записи и индексы должны сохраниться.
-
-## 6. Тестирование
-
-Проверяются следующие случаи:
-
-1. Создание обеих таблиц и внешнего ключа.
-2. Вставка корректной записи.
-3. Отклонение повторного первичного ключа.
-4. Отклонение внешнего ключа, которого нет в родительской таблице.
-5. Выборка всех полей и отдельных столбцов.
-6. Фильтрация сравнением чисел, строк, дат и логических значений.
-7. Изменение и удаление записей.
-8. Создание индекса и выполнение равенства по индексированному столбцу.
-9. Перезапуск приложения и восстановление записей и индексов.
-10. Запрет удаления категории, если на неё ссылаются комплектующие.
-
-### Сравнение производительности
-
-В проект включён `PerformanceTest`. Он создаёт 100 000 записей и сравнивает поиск 1 значения линейным перебором и через индекс. Чтобы запустить:
 
 ```bash
 mvn test-compile
