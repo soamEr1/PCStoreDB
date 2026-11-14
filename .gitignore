@@ -1,0 +1,6 @@
+target/
+data/*.db
+data/*.tmp
+data/*.corrupt
+.idea/
+*.iml
