@@ -23,32 +23,10 @@
 
 Связь: одна категория может содержать много комплектующих (1:N).
 
-### Последовательность SELECT с индексом
 
-```mermaid
-sequenceDiagram
-    participant User as Пользователь
-    participant Main
-    participant SQL as SqlEngine
-    participant Table
-    User->>Main: SELECT ... WHERE category_id = 1
-    Main->>SQL: execute(command)
-    SQL->>Table: проверить наличие индекса
-    alt индекс существует
-      SQL->>Table: findByIndex(category_id, 1)
-      Table-->>SQL: набор первичных ключей
-    else индекса нет
-      SQL->>Table: получить все записи
-      Table-->>SQL: все записи
-    end
-    SQL->>SQL: проверить условие и сформировать таблицу
-    SQL-->>Main: результат SELECT
-    Main-->>User: вывод результата
-```
+## 2. Запуск
 
-## 4. Запуск
-
-Требуется JDK 8 или новее и Maven.
+Требуется JDK 8 или новее и равен.
 
 Из корневой папки проекта:
 
@@ -59,7 +37,7 @@ java -jar target/pc-store-db-1.0.jar
 
 Либо запустите класс `pcdb.Main` из IntelliJ IDEA. Рабочая папка должна быть корнем проекта, чтобы файл `data/pcstore.db` создавался в папке `data`.
 
-## 5. Пример работы
+## 3. Пример работы
 
 Вводите команды по одной строке. В конце каждой команды можно ставить `;`.
 
