@@ -1,67 +1,79 @@
-# Гарафутдинов Лев 25КНТ-6. MiniDB — упрощённая СУБД на Java.
+## Гарафутдинов Лев Давидович 25КНТ-6
+## 1. Архитектура системы
 
-## 1. Предметная область и структура таблиц
+Основные классы программы:
 
-`categories` — категории компьютерных комплектующих.
+- `Main` — взаимодействие с пользователем.
+- `SqlEngine` — обработка SQL-команд.
+- `Database` — управление базой данных и сохранение файлов.
+- `Table` — работа с записями и индексами.
+- `Row` — хранение записей.
+- `Column` — описание столбцов.
+- `Condition` — проверка условий поиска.
+- `DataType` — типы данных.
 
-| Поле | Тип | Назначение |
-|---|---|---|
-| id | INT | первичный ключ |
-| name | STRING | название категории |
-| description | STRING | описание |
+Диаграмма классов:
 
-`components` — товары каталога.
-
-| Поле | Тип | Назначение |
-|---|---|---|
-| id | INT | первичный ключ |
-| name | STRING | название комплектующего |
-| category_id | INT | внешний ключ на categories.id |
-| price | DOUBLE | цена |
-| release_date | DATE | дата выпуска |
-| in_stock | BOOLEAN | наличие на складе |
-
-Связь: одна категория может содержать много комплектующих (1:N).
-
-
-## 2. Запуск
-
-Требуется JDK 8 или новее и равен.
-
-Из корневой папки проекта:
-
-```bash
-mvn clean package
-java -jar target/pc-store-db-1.0.jar
+```mermaid
+classDiagram
+    Main --> SqlEngine
+    SqlEngine --> Database
+    Database --> Table
+    Table --> Row
+    Table --> Column
+    SqlEngine --> Condition
 ```
 
-Либо запустите класс Main из IntelliJ IDEA
+Диаграмма последовательности:
 
-## 3. Пример работы
+```mermaid
+sequenceDiagram
+    actor User
+    User->>Main: SQL-команда
+    Main->>SqlEngine: Передача команды
+    SqlEngine->>Database: Запрос данных
+    Database->>Table: Работа с таблицей
+    Table-->>Database: Результат
+    Database-->>Main: Результат
+    Main-->>User: Вывод
+```
 
-Вводите команды по одной строке. В конце каждой команды можно ставить `;`.
+## 2. Результаты тестирования производительности
+
+Тест проводился на 100 000 записях.
+
+| Способ поиска | Время |
+|---|---:|
+| Без индекса | 4,24 мс |
+| С индексом | 0,40 мс |
+
+Использование индекса ускорило поиск примерно в 10,6 раза.
+
+## 3. Инструкция пользователя
+
+Для запуска необходимо открыть проект в IntelliJ IDEA и запустить `Main.java`.
+
+Примеры команд:
 
 ```sql
 CREATE TABLE categories (id INT PRIMARY KEY, name STRING, description STRING);
-CREATE TABLE components (id INT PRIMARY KEY, name STRING, category_id INT, price DOUBLE, release_date DATE, in_stock BOOLEAN, FOREIGN KEY (category_id) REFERENCES categories(id));
 
 INSERT INTO categories VALUES (1, 'Процессоры', 'CPU');
-INSERT INTO categories VALUES (2, 'Видеокарты', 'GPU');
 
-INSERT INTO components VALUES (1, 'AMD Ryzen 7', 1, 28999.0, '2025-01-15', TRUE);
-INSERT INTO components VALUES (2, 'Intel Core i5', 1, 19999.0, '2024-06-10', TRUE);
-INSERT INTO components (id, name, category_id) VALUES (3, 'GeForce RTX', 2);
+SELECT * FROM categories;
 
-SELECT * FROM components;
-SELECT name, price FROM components WHERE price > 20000.0;
-
-CREATE INDEX idx_components_category ON components (category_id);
-SELECT * FROM components WHERE category_id = 1;
-
-UPDATE components SET price = 30000.0 WHERE id = 1;
-DELETE FROM components WHERE id = 2;
+SELECT * FROM categories WHERE id = 1;
 ```
-```bash
-mvn test-compile
-java -cp target/test-classes:target/classes pcdb.PerformanceTest
 
+## 4. Область ответственности участников
+
+Работа выполнена индивидуально.
+
+## 5. Выводы
+
+В ходе лабораторной работы была разработана мини-СУБД PCStoreDB на Java. Реализованы создание таблиц, добавление, поиск, изменение и удаление записей, проверка ключей, сохранение данных и индексация. Тестирование показало, что использование индекса ускоряет поиск.
+
+## 6. Использованные источники
+https://www.youtube.com/watch?v=0beocykXUag
+https://www.youtube.com/watch?v=k0boqNw13Mc
+А так же лекции Максима Л.))
